@@ -15,6 +15,9 @@ const Signup = () => {
     role: "customer",
   });
 
+  /* =========================
+     Form handling
+  ========================= */
   const handleChange = (e) => {
     setError?.(null);
     const { name, value } = e.target;
@@ -33,10 +36,17 @@ const Signup = () => {
 
     const result = await signup({ name, email, password, role });
 
-    if (result.success) {
-      // After successful signup, redirect (e.g., to home or dashboard)
+    if (result?.success) {
       navigate("/");
     }
+  };
+
+  /* =========================
+     Google Signup
+     (role decided on backend or default customer)
+  ========================= */
+  const handleGoogleSignup = () => {
+    window.location.href = "http://localhost:5000/auth/google";
   };
 
   return (
@@ -46,6 +56,7 @@ const Signup = () => {
         Join Visual Shop as a customer or a vendor.
       </p>
 
+      {/* Error */}
       {error && (
         <div
           style={{
@@ -62,6 +73,55 @@ const Signup = () => {
         </div>
       )}
 
+      {/* =========================
+          GOOGLE SIGNUP
+      ========================= */}
+      <button
+        type="button"
+        onClick={handleGoogleSignup}
+        style={{
+          width: "100%",
+          padding: "10px",
+          borderRadius: "999px",
+          border: "1px solid rgba(148,163,184,0.8)",
+          backgroundColor: "rgba(15,23,42,0.9)",
+          color: "#e5e7eb",
+          fontSize: "0.9rem",
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "10px",
+          marginBottom: "12px",
+        }}
+      >
+        <img
+          src="https://developers.google.com/identity/images/g-logo.png"
+          alt="Google"
+          style={{ width: "18px", height: "18px" }}
+        />
+        Continue with Google
+      </button>
+
+      {/* Divider */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          margin: "10px 0",
+          color: "#9ca3af",
+          fontSize: "0.75rem",
+        }}
+      >
+        <div style={{ flex: 1, height: "1px", background: "#334155" }} />
+        OR
+        <div style={{ flex: 1, height: "1px", background: "#334155" }} />
+      </div>
+
+      {/* =========================
+          EMAIL / PASSWORD SIGNUP
+      ========================= */}
       <form
         onSubmit={handleSubmit}
         style={{
@@ -150,7 +210,7 @@ const Signup = () => {
   );
 };
 
-// shared style for inputs
+/* Shared input style */
 const inputStyle = {
   padding: "8px 10px",
   borderRadius: "8px",

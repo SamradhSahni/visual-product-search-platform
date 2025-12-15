@@ -15,10 +15,14 @@ const Login = () => {
   });
 
   const from =
-    location.state?.from?.pathname && location.state.from.pathname !== "/login"
+    location.state?.from?.pathname &&
+    location.state.from.pathname !== "/login"
       ? location.state.from.pathname
       : "/";
 
+  /* =========================
+     Email / Password Login
+  ========================= */
   const handleChange = (e) => {
     setError?.(null);
     const { name, value } = e.target;
@@ -38,9 +42,17 @@ const Login = () => {
       password: form.password,
     });
 
-    if (result.success) {
+    if (result?.success) {
       navigate(from, { replace: true });
     }
+  };
+
+  /* =========================
+     Google Login
+  ========================= */
+  const handleGoogleLogin = () => {
+    // Redirect to backend Google OAuth route
+    window.location.href = "http://localhost:5000/auth/google";
   };
 
   return (
@@ -50,6 +62,7 @@ const Login = () => {
         Log in to continue shopping or manage your vendor dashboard.
       </p>
 
+      {/* Error */}
       {error && (
         <div
           style={{
@@ -66,6 +79,55 @@ const Login = () => {
         </div>
       )}
 
+      {/* =========================
+          GOOGLE LOGIN
+      ========================= */}
+      <button
+        type="button"
+        onClick={handleGoogleLogin}
+        style={{
+          width: "100%",
+          padding: "10px",
+          borderRadius: "999px",
+          border: "1px solid rgba(148,163,184,0.8)",
+          backgroundColor: "rgba(15,23,42,0.9)",
+          color: "#e5e7eb",
+          fontSize: "0.9rem",
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "10px",
+          marginBottom: "12px",
+        }}
+      >
+        <img
+          src="https://developers.google.com/identity/images/g-logo.png"
+          alt="Google"
+          style={{ width: "18px", height: "18px" }}
+        />
+        Continue with Google
+      </button>
+
+      {/* Divider */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          margin: "10px 0",
+          color: "#9ca3af",
+          fontSize: "0.75rem",
+        }}
+      >
+        <div style={{ flex: 1, height: "1px", background: "#334155" }} />
+        OR
+        <div style={{ flex: 1, height: "1px", background: "#334155" }} />
+      </div>
+
+      {/* =========================
+          EMAIL / PASSWORD LOGIN
+      ========================= */}
       <form
         onSubmit={handleSubmit}
         style={{

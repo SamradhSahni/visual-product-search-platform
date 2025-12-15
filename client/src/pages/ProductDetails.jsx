@@ -9,6 +9,7 @@ import {
 import { recordUserView } from "../api/activity";
 import { useAuth } from "../context/AuthContext";
 import { addToCart } from "../api/cart";
+import ProductCard from "../components/common/ProductCard";
 
 
 const ProductDetails = () => {

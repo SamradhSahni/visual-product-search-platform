@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { listProducts } from "../api/products";
+import ProductCard from "../components/common/ProductCard";
 
 const Browse = () => {
   const location = useLocation();
@@ -94,8 +95,15 @@ const Browse = () => {
   }, [query, category, minPrice, maxPrice, page]);
 
   // Fetch products when URL (filters) change
+  // Fetch products when URL (filters) change, but avoid fetching if the
+  // URL indicates the page is in "image search" mode (so we're not
+  // accidentally overriding a user's image search results elsewhere).
   useEffect(() => {
-    fetchProducts();
+    const params = new URLSearchParams(location.search);
+    const isImageSearch = (params.get("image") || params.get("imageSearch") || params.get("isImageSearch")) === "1" || (params.get("image") || params.get("imageSearch") || params.get("isImageSearch")) === "true";
+    if (!isImageSearch) {
+      fetchProducts();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.search]);
 
@@ -307,58 +315,7 @@ const Browse = () => {
   );
 };
 
-const ProductCard = ({ product }) => {
-  const price = Number(product.price) || 0;
-  const placeholderInitial = product.title?.[0]?.toUpperCase() || "?";
-  const imageUrl = product.imageUrl ? `http://localhost:5000${product.imageUrl}` : null;
 
-  return (
-    <Link to={`/product/${product._id}`} style={{ textDecoration: "none", color: "inherit" }}>
-      <div
-        style={{
-          borderRadius: "14px",
-          border: "1px solid rgba(148,163,184,0.6)",
-          backgroundColor: "rgba(15,23,42,0.9)",
-          padding: "8px",
-          display: "flex",
-          flexDirection: "column",
-          gap: "6px",
-          height: "100%",
-        }}
-      >
-        <div
-          style={{
-            borderRadius: "10px",
-            height: "140px",
-            background: "radial-gradient(circle at top left, #38bdf8, #4f46e5, #020617)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            overflow: "hidden",
-          }}
-        >
-          {imageUrl ? (
-            <img src={imageUrl} alt={product.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-          ) : (
-            <span style={{ fontSize: "2rem", fontWeight: 700, color: "#e5e7eb" }}>{placeholderInitial}</span>
-          )}
-        </div>
-        <div style={{ flex: 1 }}>
-          <h3 style={{ fontSize: "0.95rem", margin: "6px 0 2px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
-            {product.title}
-          </h3>
-          <p style={{ fontSize: "0.78rem", color: "#9ca3af", margin: 0, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
-            {product.category}
-          </p>
-        </div>
-        <div style={{ marginTop: "6px", display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "0.85rem" }}>
-          <span style={{ fontWeight: 600 }}>₹ {price.toLocaleString()}</span>
-          <span style={{ fontSize: "0.75rem", color: "#9ca3af" }}>{product.vendor?.name || "Vendor"}</span>
-        </div>
-      </div>
-    </Link>
-  );
-};
 
 /* ---- Styles used in this component ---- */
 const inputStyle = {
